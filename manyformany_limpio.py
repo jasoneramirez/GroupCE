@@ -1,4 +1,4 @@
-###many-for-many counterfactuals
+###one-for-many counterfactuals
 
 import gurobipy as gp
 from gurobipy import GRB
@@ -22,7 +22,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
-#datos boston
+# boston data
 def datos():
     dataset=load_boston()
     dataset.keys()
@@ -40,9 +40,9 @@ def datos():
     y=boston['target']
     return x, y
 
+#classication model
 def modelo(x,y,tipo):
     random.seed(10)
-    #Boston Housing
     x_train, x_test, y_train, y_test = train_test_split(x, y,test_size=0.33)
     #Logistic Regresion
     if tipo=='LR':
@@ -91,8 +91,6 @@ def modelo(x,y,tipo):
         labels = np.sign(model.dual_coef_)
         alphas=abs(model.dual_coef_)
         xsupport=model.support_vectors_
-
-        #Ns=model.dual_coef_.shape[1]
         
         
         
@@ -116,23 +114,20 @@ features_type=feature_type(x2)
 x_test,y_pred, model, w,b, gamm, labels, alphas,xsupport=modelo(x2,y2,"LR")
 y_pred_todos=model.predict(x2)
 
-#Instance x0 and lam
+#Instance x0 
 x0=x2.iloc[y_pred_todos==-1,]
 
 
+# ONE-FOR-ALL
 
 
-# ONE-FOR MANY
-
-
-
-def oneformany_linear_hard(w,b,x0,features_type,phinu):
+def oneforall_linear_hard(w,b,x0,features_type,phinu):
 
     features=list(x0.columns)
     indices=list(x0.index)
     n=x0.shape[0]
 
-    m=gp.Model("oneformanylinear")
+    m=gp.Model("oneforalllinear")
 
     #parameters
     bb=b
@@ -180,11 +175,11 @@ def oneformany_linear_hard(w,b,x0,features_type,phinu):
 
 
 
-counterf,chang=oneformany_linear_hard(w,b,x0,features_type,0)
+counterf,chang=oneforall_linear_hard(w,b,x0,features_type,0)
 
 
 
-# MANY-FOR-MANY
+# ONE-FOR-MANY
 
 #number prototypes: P
 
@@ -194,7 +189,7 @@ P=3
 def alternating_lineal_manual_hard(xsol,x0,features_type,P,w,b,kmax,phinu):
 
 
-    #initial solution calculated like kmeans++ (trying with the positive data)
+    #initial solution calculated like kmeans++ 
     prototypes = [xsol.sample().squeeze()] 
     for _ in range(P-1):
     # Calculate distances from points to the prototypes
@@ -212,11 +207,11 @@ def alternating_lineal_manual_hard(xsol,x0,features_type,P,w,b,kmax,phinu):
     while np.not_equal(prev_prototypes,prototypes).any() and k<kmax:
         prev_prototypes=prototypes
         clusters=[[] for _ in range(P)]
-        for i in range(x0.shape[0]): #para cada instancia calcula la distancia a los prototipos
+        for i in range(x0.shape[0]): 
             distances=[sum((prev_prototypes[k]-x0.iloc[i])**2) for k in range(P)] 
-            prototype_index=np.argmin(distances) #miro a que prototipo (cluster) se une cada uno
+            prototype_index=np.argmin(distances) ¡
             clusters[prototype_index].append(x0.iloc[i])
-        prototypes=[oneformany_linear_hard(w,b,pd.DataFrame(clusters[j]),features_type,phinu)[0] if clusters[j]!=[] else prev_prototypes[j] for j in range(P)]
+        prototypes=[oneforall_linear_hard(w,b,pd.DataFrame(clusters[j]),features_type,phinu)[0] if clusters[j]!=[] else prev_prototypes[j] for j in range(P)]
         if all(x in clusters for x in [[], []]):
             print('k: '+str(k)+', collapsed')
         k+=1
@@ -233,14 +228,4 @@ P=3
 prototypes, clusters,k=alternating_lineal_manual_hard(xsol,x0,features_type,P,w,b,kmax,phinu)
 
 
-
-with open('counterf_P3_nu09_LR2.json', 'w') as file:
-     file.write(json.dumps(pd.DataFrame(prototypes).to_json())) 
-
-with open('cluster1_P3_nu09_LR2.json', 'w') as file:
-     file.write(json.dumps(pd.DataFrame(clusters[0]).to_json())) 
-with open('cluster2_P3_nu09_LR2.json', 'w') as file:
-     file.write(json.dumps(pd.DataFrame(clusters[1]).to_json())) 
-with open('cluster3_P3_nu09_LR2.json', 'w') as file:
-     file.write(json.dumps(pd.DataFrame(clusters[2]).to_json())) 
 
