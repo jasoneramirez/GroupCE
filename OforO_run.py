@@ -12,7 +12,7 @@ from pyomo.environ import *
 from pyomo.opt import SolverFactory
 from numpy import linalg as l2
 
-import modelo_opt
+import OforO_model_opt
 import model_training
 import numpy as np
 import pandas as pd
