@@ -227,5 +227,16 @@ phinu=-(math.log(1/9))
 P=3
 prototypes, clusters,k=alternating_lineal_manual_hard(xsol,x0,features_type,P,w,b,kmax,phinu)
 
+#save to then visualize:
+
+with open('counterf_P3_nu09_LR2.json', 'w') as file:
+     file.write(json.dumps(pd.DataFrame(prototypes).to_json())) 
+
+with open('cluster1_P3_nu09_LR2.json', 'w') as file:
+     file.write(json.dumps(pd.DataFrame(clusters[0]).to_json())) 
+with open('cluster2_P3_nu09_LR2.json', 'w') as file:
+     file.write(json.dumps(pd.DataFrame(clusters[1]).to_json())) 
+with open('cluster3_P3_nu09_LR2.json', 'w') as file:
+     file.write(json.dumps(pd.DataFrame(clusters[2]).to_json())) 
 
 
