@@ -89,7 +89,7 @@ timelimit=10000
 
 
 sol_ini={}
-data,fobj=run_rf.optimization_collective(x0,y0,perc,model_opt_col,leaves, values, constraints_right_numerical, constraints_left_numerical, constraints_right_categorical,constraints_left_categorical,index_cont,index_cat,model_clas,tree_data,timelimit,sol_ini,lam,nu)
+data=run_rf.optimization_collective(x0,y0,perc,model_opt_col,leaves, values, constraints_right_numerical, constraints_left_numerical, constraints_right_categorical,constraints_left_categorical,index_cont,index_cat,model_clas,tree_data,timelimit,sol_ini,lam,nu)
 data=run_rf.optimization_lineal_collective(x0,y0,perc,model_opt_col,w,b,index_cont,index_cat,timelimit,lam,nu)
 
 
