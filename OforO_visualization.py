@@ -1,12 +1,12 @@
 
 import numpy as np
 import pandas as pd
-import run_rf
+import OforO_run
 import seaborn as sns
 import matplotlib.pyplot as plt
 import statistics
 import model_training 
-import modelo_opt
+import OforO_model_opt
 from sklearn import preprocessing
 from numpy import linalg as l2
 import json
@@ -64,8 +64,9 @@ x,y,y_pred,model,w, b=model_training.linear_model('LR',x,y)
 
 #rf
 objective="l2l0global"
-model_opt_col=modelo_opt.modelo_opt_rf_nonseparable(leaves,index_cont,index_cat,objective,'False')
-model_opt_col=modelo_opt.modelo_opt_lineal_nonseparable(index_cont,index_cat,objective)
+model_opt_col=OforO_model_opt.modelo_opt_rf_nonseparable(leaves,index_cont,index_cat,objective,'False')
+#or
+model_opt_col=OforO_model_opt.modelo_opt_lineal_nonseparable(index_cont,index_cat,objective)
 
 
 
@@ -89,8 +90,10 @@ timelimit=10000
 
 
 sol_ini={}
-data=run_rf.optimization_collective(x0,y0,perc,model_opt_col,leaves, values, constraints_right_numerical, constraints_left_numerical, constraints_right_categorical,constraints_left_categorical,index_cont,index_cat,model_clas,tree_data,timelimit,sol_ini,lam,nu)
-data=run_rf.optimization_lineal_collective(x0,y0,perc,model_opt_col,w,b,index_cont,index_cat,timelimit,lam,nu)
+data=OforO_run.optimization_collective(x0,y0,perc,model_opt_col,leaves, values, constraints_right_numerical, constraints_left_numerical, constraints_right_categorical,constraints_left_categorical,index_cont,index_cat,model_clas,tree_data,timelimit,sol_ini,lam,nu)
+
+#or
+data=OforO_run.optimization_lineal_collective(x0,y0,perc,model_opt_col,w,b,index_cont,index_cat,timelimit,lam,nu)
 
 
 
