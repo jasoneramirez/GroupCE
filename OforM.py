@@ -55,10 +55,6 @@ def modelo(x,y,tipo):
         w=model.coef_
         b=model.intercept_
 
-        gamm=[] 
-        labels=[]
-        alphas=[]
-        xsupport=[]
         
     elif tipo=='SVM_linear':
         #SVM
@@ -72,29 +68,10 @@ def modelo(x,y,tipo):
         y_pred=model.predict(x_test)
         w=model.coef_
         b=model.intercept_
-        gamm=[] 
-        labels=[]
-        alphas=[]
-        xsupport=[]
-
-    elif tipo=='SVM_RBF':
-        model=SVC(kernel="rbf",probability=True)
-        parameters={'C':[1e0, 1e1, 1e2, 1e3],'gamma':np.logspace(-2, 2, 5)}
-        grid_sv=GridSearchCV(model,param_grid=parameters)
-        grid_sv.fit(x_train,y_train)
-        model.fit(x_train,y_train)
-        model=grid_sv.best_estimator_
-        y_pred=model.predict(x_test)
-        gamm=model.gamma
-        w=[]
-        b=[]
-        labels = np.sign(model.dual_coef_)
-        alphas=abs(model.dual_coef_)
-        xsupport=model.support_vectors_
+     
         
         
-        
-    return x_test,y_pred, model, w,b, gamm, labels, alphas,xsupport
+    return x_test,y_pred, model, w,b
 
 def feature_type(dataset):
     features=list(dataset.columns)
@@ -111,7 +88,7 @@ features_type=feature_type(x2)
 
 
 #The model:
-x_test,y_pred, model, w,b, gamm, labels, alphas,xsupport=modelo(x2,y2,"LR")
+x_test,y_pred, model, w,b=modelo(x2,y2,"LR")
 y_pred_todos=model.predict(x2)
 
 #Instance x0 
