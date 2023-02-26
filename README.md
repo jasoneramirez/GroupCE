@@ -20,4 +20,4 @@ To run the experiments for the one-for-many model:
 
 * 'OforM.py': calculates $P$ counterfactuals and their respective clusters for the LR model 
 
-For for heatmaps: 'heatmaps.ipynb'
+For more heatmaps: 'heatmaps.ipynb'
