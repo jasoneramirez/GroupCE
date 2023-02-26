@@ -61,20 +61,10 @@ x,y,y_pred,model,w, b=model_training.linear_model('LR',x,y)
 
 
 #create the optimization model
-objective='l0l2'
-model_opt=modelo_opt.modelo_opt_rf_separable(leaves,index_cont,index_cat,objective)
 
-#collective
+#rf
 objective="l2l0global"
 model_opt_col=modelo_opt.modelo_opt_rf_nonseparable(leaves,index_cont,index_cat,objective,'False')
-#model_opt_col=modelo_opt_rf_nonseparable(leaves,index_cont,index_cat,objective,'False')
-
-#lineal
-objective='l0l2'
-model_opt=modelo_opt.modelo_opt_lineal_separable(index_cont,index_cat,objective)
-
-#linealcollective
-objective="l2l0global"
 model_opt_col=modelo_opt.modelo_opt_lineal_nonseparable(index_cont,index_cat,objective)
 
 
@@ -97,78 +87,14 @@ timelimit=10000
 
 
 
-result={}
-final_class={}
-x_sols={}
-for i in indices:
-        x_sols[i],result[i],final_class[i]=run_rf.optimization_individual(i,timelimit,x0,y0,lam,model_opt,leaves, values, constraints_right_numerical, constraints_left_numerical, constraints_right_categorical,constraints_left_categorical,index_cont,index_cat,model_clas,tree_data,x,y)
-
-
-#lineal
-for i in indices:
-        x_sols[i],result[i],final_class[i]=run_rf.optimization_lineal_ind(i,x0,y0,lam,model_opt,w,b,index_cont,index_cat)
-
-
-
-#no-separable
-
 
 sol_ini={}
 data,fobj=run_rf.optimization_collective(x0,y0,perc,model_opt_col,leaves, values, constraints_right_numerical, constraints_left_numerical, constraints_right_categorical,constraints_left_categorical,index_cont,index_cat,model_clas,tree_data,timelimit,sol_ini,lam,nu)
-
 data=run_rf.optimization_lineal_collective(x0,y0,perc,model_opt_col,w,b,index_cont,index_cat,timelimit,lam,nu)
 
 
-datas=[]
-fobjs=[]
-for nu in [0.8,0.9]:
-    data,fobj=run_rf.optimization_collective(x0,y0,perc,model_opt_col,leaves, values, constraints_right_numerical, constraints_left_numerical, constraints_right_categorical,constraints_left_categorical,index_cont,index_cat,model_clas,tree_data,timelimit,sol_ini,lam,nu)
-    datas.append(data)
-    fobjs.append(fobj)
-
-   
 
 
-
-datas=[]
-fobjs=[]
-for nu in [0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95]:
-    #data,fobj=run_rf.optimization_lineal_collective(x0,y0,perc,model_opt_col,w,b,index_cont,index_cat,timelimit,lam,nu)
-    data,fobj=optimization_lineal_collective(x0,y0,perc,model_opt_col,w,b,index_cont,index_cat,timelimit,lam,nu)
-    datas.append(data)
-    fobjs.append(fobj)
-
-    
-
-
-
-
-# the heatmaps
-
-def data_heatmap(resul,final_class,features,indices):
-
-   
-
-    resul_neg={} #ind que pasan de neg a pos
-    resul_pos={} #ind que pasan de pos a neg
-
-
-    for i in indices:
-        if final_class[i]==1:
-            resul_neg[i]=resul[i]
-        elif final_class[i]==-1:
-            resul_pos[i]=resul[i]
-
-
-    data=pd.DataFrame(resul,index=features)
-
-    data1=pd.DataFrame(resul_neg,index=features).transpose()
-    data2=pd.DataFrame(resul_pos,index=features).transpose()
-
-
-    return data1,data2
-
-data1,data2=data_heatmap(result,final_class,features,indices)
 
 plt.clf()
 sns.set(rc={'figure.figsize':(12, 8)})
