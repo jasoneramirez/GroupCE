@@ -5,7 +5,7 @@ Created on Thu Jan  9 14:03:17 2020
 @author: Jasone
 """
 
-# el run
+
 
 from __future__ import division
 from pyomo.environ import *
@@ -73,7 +73,7 @@ def optimization_collective(x0,y0,perc,model,leaves, values, constraints_right_n
         sol_ini=model_clas.apply(x_ini)  #necesito el modelo
         z_sol_ini={}
         for i in range(0,n_ind):
-            z_sol_ini[i]=list(map(lambda tl:tree_data[tl[0]]['index_leaves'].index(tl[1]),enumerate(sol_ini[i]))) #necesito datos_arbol
+            z_sol_ini[i]=list(map(lambda tl:tree_data[tl[0]]['index_leaves'].index(tl[1]),enumerate(sol_ini[i]))) 
 
 
         z={}
