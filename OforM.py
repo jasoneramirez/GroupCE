@@ -32,11 +32,11 @@ def datos():
     boston_s = pd.DataFrame(boston_s,columns=boston.columns)
     boston=boston_s
     boston["MEDV"] = dataset.target
-    boston['target']=boston['MEDV'].apply(lambda x: -1 if x<=22 else 1) #lo paso a clasificacion
+    boston['target']=boston['MEDV'].apply(lambda x: -1 if x<=22 else 1) #classification
     boston=boston.drop('MEDV', axis=1) 
     boston['target']=boston['target'].astype('category', copy=False) 
     x=boston.drop('target',axis=1)
-    x['CHAS']=x['CHAS'].astype('category') #no olvidar indicar cuales son categoricas
+    x['CHAS']=x['CHAS'].astype('category') #categorical feature
     y=boston['target']
     return x, y
 
@@ -46,7 +46,7 @@ def modelo(x,y,tipo):
     x_train, x_test, y_train, y_test = train_test_split(x, y,test_size=0.33)
     #Logistic Regresion
     if tipo=='LR':
-        model = LogisticRegression(solver='liblinear', random_state=0,C=10.0) #C regularizacion
+        model = LogisticRegression(solver='liblinear', random_state=0,C=10.0) 
         model.fit(x_train,y_train)
 
         y_pred_prob=model.predict_proba(x_test)
