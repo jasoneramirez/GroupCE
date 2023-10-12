@@ -35,11 +35,11 @@ def datos():
     boston_s = pd.DataFrame(boston_s,columns=boston.columns)
     boston=boston_s
     boston["MEDV"] = dataset.target
-    boston['target']=boston['MEDV'].apply(lambda x: -1 if x<=22 else 1) #lo paso a clasificacion
+    boston['target']=boston['MEDV'].apply(lambda x: -1 if x<=22 else 1) #classification
     boston=boston.drop('MEDV', axis=1) 
     boston['target']=boston['target'].astype('category', copy=False) 
     x=boston.drop('target',axis=1)
-    x['CHAS']=x['CHAS'].astype('category') #no olvidar indicar cuales son categoricas
+    x['CHAS']=x['CHAS'].astype('category') #categorical features
     y=boston['target']
     return x, y
 
@@ -73,15 +73,15 @@ model_opt_col=OforO_model_opt.modelo_opt_lineal_nonseparable(index_cont,index_ca
 
 #define x0 and solve
 
-x0=x[y_pred.squeeze()==-1][1:11]
-y0=y_pred[y_pred.squeeze()==-1][1:11].squeeze()
+x0=x[y_pred.squeeze()==-1][0:10]
+y0=y_pred[y_pred.squeeze()==-1][0:10].squeeze()
 
 
 
 indices=x0.index
-perc=10
-nu=0.5
-lam=0.1
+perc=10 #value of |I*|
+nu=0.5 #probability threshold
+lam=0.1 #lam*l0+l2
 
 #define timelimit
 timelimit=10000
@@ -98,7 +98,7 @@ data=OforO_run.optimization_lineal_collective(x0,y0,perc,model_opt_col,w,b,index
 
 
 
-
+#visualize the heatmap
 plt.clf()
 sns.set(rc={'figure.figsize':(12, 8)})
 ax = sns.heatmap(data,linewidths=.5,center=0,vmin=-0.3,vmax=0.3, cmap="PiYG",yticklabels=False,square=True)
