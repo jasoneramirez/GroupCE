@@ -17,7 +17,7 @@ def linear_model(type,x,y):
     x_train, x_test, y_train, y_test = train_test_split(x, y,test_size=0.33,random_state=0)
 
     if type=='LR':
-        model = LogisticRegression(solver='liblinear', random_state=0,C=10.0) #choose C?
+        model = LogisticRegression(solver='liblinear', random_state=0,C=10.0) #choose C by cv
         model.fit(x_train,y_train)
         y_pred_prob=model.predict_proba(x_test)
         y_pred=pd.DataFrame(model.predict(x).tolist(),index=x.index,columns=['y'])
